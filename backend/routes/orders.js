@@ -1,0 +1,22 @@
+const express = require('express');
+const router = express.Router();
+
+// Enviar un pedido
+router.post('/', (req, res) => {
+  const { flavors } = req.body;
+
+  //Verificar si no hay sabores seleccionados
+  if (!flavors || flavors.length === 0) {
+    return res.status(400).json({ error: 'Error: selecciona al menos un sabor'});
+  }
+
+  //Verificar si el número de sabores excede el límite
+  if (flavors.length > 3) {
+    return next({ status: 400, message: 'Error sólo está permitido seleccionar un máximo de 3 sabores'});
+  }
+
+  // Guardar el pedido en la base de datos
+  res.json({ message: 'Pedido recibido', flavors });
+});
+
+module.exports = router;
