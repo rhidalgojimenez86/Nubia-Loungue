@@ -27,4 +27,5 @@ const getPool = () => {
   return pool;
 };
 
+// Exportar getPool correctamente como default
 export default getPool;

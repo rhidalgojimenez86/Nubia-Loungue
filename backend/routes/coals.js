@@ -1,4 +1,5 @@
-const express = require('express');
+import express from 'express';
+
 const router = express.Router();
 
 // Solicitar cambio de carbones
@@ -11,4 +12,4 @@ router.post('/', (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;

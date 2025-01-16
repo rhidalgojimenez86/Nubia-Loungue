@@ -1,6 +1,5 @@
 import bcrypt from "bcrypt";
 import getPool from "./getPool.js";
-
 import {
   MYSQL_DATABASE,
   ADMIN_EMAIL,
@@ -78,12 +77,12 @@ async function createTables() {
 
     console.log("Tablas creadas correctamente");
 
-    // Insertar un usuario administrador
+    // Insertar un usuario administrador con placeholders
     const hashedPass = await bcrypt.hash(ADMIN_PASSWORD, 10);
     await pool.query(`
       INSERT INTO users (email, firstName, lastName, password, role)
-      VALUES ("${ADMIN_EMAIL}", "${ADMIN_FIRST_NAME}", "${ADMIN_LAST_NAME}", "${hashedPass}", "admin")
-    `);
+      VALUES (?, ?, ?, ?, ?)
+    `, [ADMIN_EMAIL, ADMIN_FIRST_NAME, ADMIN_LAST_NAME, hashedPass, 'admin']);
 
     console.log("Usuario administrador insertado");
   } catch (error) {
@@ -96,10 +95,8 @@ async function initDB() {
     await createDB();
     await createTables();
     console.log("Base de datos inicializada correctamente");
-    process.exit(0);
   } catch (error) {
-    console.error(error.message);
-    process.exit(1);
+    console.error("Error al inicializar la base de datos:", error.message);
   }
 }
 
