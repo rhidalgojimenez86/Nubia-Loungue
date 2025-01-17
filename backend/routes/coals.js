@@ -12,3 +12,4 @@ router.post('/', (req, res) => {
 });
 
 export default router;  // Exportación por defecto
+
