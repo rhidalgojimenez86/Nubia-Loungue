@@ -1,6 +1,26 @@
-async function createTables() {
+import bcrypt from 'bcryptjs';  // Asegúrate de importar bcrypt correctamente
+
+import getPool from "./getPool.js"; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
+
+export async function createTables() {
+  console.log("Iniciando la creación de tablas..."); // Esto te dirá si esta función se está ejecutando
+
+  // Accede a las variables de entorno usando process.env
+  const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
+  const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+  const ADMIN_FIRST_NAME = process.env.ADMIN_FIRST_NAME;
+  const ADMIN_LAST_NAME = process.env.ADMIN_LAST_NAME;
+
   try {
+    // Accede a las variables de entorno usando process.env
+    const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
+
+    // Verificar que la variable de entorno esté cargada correctamente
+    console.log("MYSQL_DATABASE:", MYSQL_DATABASE);
+
     const pool = await getPool();
+    
+    // Usar la base de datos definida en la variable de entorno
     await pool.query(`USE ${MYSQL_DATABASE}`);
 
     // Eliminar tablas existentes si las hay
@@ -15,6 +35,7 @@ async function createTables() {
         createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
+    console.log('Tabla de mesas creada');
 
     // Crear tabla de usuarios
     await pool.query(`
@@ -28,6 +49,7 @@ async function createTables() {
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `);
+    console.log('Tabla de usuarios creada');
 
     // Crear tabla de sabores dulces
     await pool.query(`
