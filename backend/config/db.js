@@ -1,5 +1,7 @@
-require('dotenv').config(); // Carga las variables del archivo .env
-const mysql = require('mysql2');
+import dotenv from 'dotenv';  // Importa dotenv
+import mysql from 'mysql2';    // Importa mysql2
+
+dotenv.config();  // Carga las variables del archivo .env
 
 const connection = mysql.createConnection({
   host: process.env.MYSQL_HOST,
@@ -17,4 +19,4 @@ connection.connect((err) => {
   }
 });
 
-module.exports = connection;
+export default connection;  // Exportación por defecto

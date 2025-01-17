@@ -1,4 +1,4 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 
 // Enviar un pedido
@@ -19,4 +19,4 @@ router.post('/', (req, res) => {
   res.json({ message: 'Pedido recibido', flavors });
 });
 
-module.exports = router;
+export default router;  // Exportación por defecto

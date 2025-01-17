@@ -1,31 +1,20 @@
-import bcrypt from "bcrypt";
-import getPool from "./getPool.js";
-
-import {
-  MYSQL_DATABASE,
-  ADMIN_EMAIL,
-  ADMIN_PASSWORD,
-  ADMIN_FIRST_NAME,
-  ADMIN_LAST_NAME,
-} from "../../env.js";
-
-async function createDB() {
-  try {
-    const pool = await getPool();
-    await pool.query(`CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE}`);
-    console.log("Base de datos creada o ya existente");
-  } catch (error) {
-    throw new Error("Error al crear la base de datos", { cause: error });
-  }
-}
-
 async function createTables() {
   try {
     const pool = await getPool();
     await pool.query(`USE ${MYSQL_DATABASE}`);
 
     // Eliminar tablas existentes si las hay
-    await pool.query(`DROP TABLE IF EXISTS sweet_flavors, citrus_flavors, premium_flavors, users`);
+    await pool.query(`DROP TABLE IF EXISTS sweet_flavors, citrus_flavors, premium_flavors, users, tables`);
+
+    // Crear tabla de mesas
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tables (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        tableNumber INT UNIQUE NOT NULL,
+        status ENUM('occupied', 'free') DEFAULT 'free', 
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
     // Crear tabla de usuarios
     await pool.query(`
@@ -90,17 +79,3 @@ async function createTables() {
     throw new Error("Error al crear las tablas", { cause: error });
   }
 }
-
-async function initDB() {
-  try {
-    await createDB();
-    await createTables();
-    console.log("Base de datos inicializada correctamente");
-    process.exit(0);
-  } catch (error) {
-    console.error(error.message);
-    process.exit(1);
-  }
-}
-
-initDB();

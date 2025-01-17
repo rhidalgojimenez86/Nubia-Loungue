@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import connection from '../config/db.js';  // Asegúrate de que db.js sea un módulo ES también
+
 const router = express.Router();
-const connection = require('../config/db');
 
 // Obtener todos los sabores de las tres categorías
 router.get('/', (req, res) => {
@@ -93,4 +94,4 @@ router.put('/:category/:id', (req, res) => {
   });
 });
 
-module.exports = router;
+export default router;  // Exportación por defecto

@@ -1,28 +1,25 @@
-import mysql from "mysql2/promise";
-import {
-  MYSQL_HOST,
-  MYSQL_PORT,
-  MYSQL_DATABASE,
-  MYSQL_USER,
-  MYSQL_PASSWORD,
-} from "../../env.js";
+import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
+
+// Cargar las variables de entorno desde el archivo .env
+dotenv.config();
 
 let pool;
 
 const getPool = () => {
   if (!pool) {
     pool = mysql.createPool({
-      host: MYSQL_HOST,
-      port: MYSQL_PORT,
-      user: MYSQL_USER,
-      password: MYSQL_PASSWORD,
-      database: MYSQL_DATABASE,
+      host: process.env.MYSQL_HOST,        // Usar las variables cargadas con dotenv
+      port: process.env.MYSQL_PORT,
+      user: process.env.MYSQL_USER,
+      password: process.env.MYSQL_PASSWORD,
+      database: process.env.MYSQL_DATABASE,
       waitForConnections: true,
       connectionLimit: 10,
       queueLimit: 0,
-      timezone: "Z",
+      timezone: 'Z',
     });
-    console.log("Pool de conexiones creado");
+    console.log('Pool de conexiones creado');
   }
   return pool;
 };
