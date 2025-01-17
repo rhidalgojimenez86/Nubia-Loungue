@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { io } from "socket.io-client"; // Importar cliente de Socket.IO
 import "./App.css";
 import CoalChangeRequest from "./assets/CoalChangeRequest.jsx";
+
+// Configurar conexión con el servidor de Socket.IO
+const socket = io("http://localhost:5000"); // Cambia la URL según tu servidor
 
 function App() {
   const [flavors, setFlavors] = useState({
@@ -10,12 +14,15 @@ function App() {
     sweet: [],
   });
   const [newFlavor, setNewFlavor] = useState({
-    category: "sweet", // Categoría por defecto
+    category: "sweet",
     name: "",
     description: "",
     price: "",
     status: "available",
   });
+
+  const [coalRequests, setCoalRequests] = useState([]); // Solicitudes de cambio de carbones
+  const [isConnected, setIsConnected] = useState(false); // Estado de la conexión WebSocket
 
   // Función para obtener los sabores desde el backend
   const fetchFlavors = async () => {
@@ -38,20 +45,53 @@ function App() {
         status,
       });
       alert("Sabor agregado con éxito");
-      fetchFlavors(); // Refresca los sabores
+      fetchFlavors();
     } catch (error) {
       console.error("Error al agregar el sabor", error);
     }
   };
 
-  // Cargar los sabores cuando el componente se monte
+  // Escuchar solicitudes de cambio de carbones
+  useEffect(() => {
+    socket.on("coal_request", (data) => {
+      setCoalRequests((prevRequests) => [...prevRequests, data]);
+    });
+
+    // Conexión y desconexión WebSocket
+    socket.on("connect", () => {
+      setIsConnected(true);
+      console.log("Conectado al servidor WebSocket");
+    });
+
+    socket.on("disconnect", () => {
+      setIsConnected(false);
+      console.log("Desconectado del servidor WebSocket");
+    });
+
+    // Limpiar el evento al desmontar el componente
+    return () => {
+      socket.off("coal_request");
+      socket.off("connect");
+      socket.off("disconnect");
+    };
+  }, []);
+
+  // Enviar solicitud de cambio de carbones
+  const sendCoalRequest = () => {
+    const tableId = prompt("Ingrese el número de la mesa");
+    if (tableId) {
+      socket.emit("new_coal_request", { tableId });
+      alert("Solicitud de cambio de carbones enviada.");
+    }
+  };
+
   useEffect(() => {
     fetchFlavors();
   }, []);
 
   return (
     <div>
-      <h1>Flavors</h1>
+      <h1>{isConnected ? "Conexión WebSocket exitosa" : "Conectando..."}</h1>
 
       {/* Mostrar los sabores de cada categoría */}
       <div>
@@ -77,7 +117,6 @@ function App() {
           ))}
         </ul>
       </div>
-
       <div>
         <h2>Premium</h2>
         <ul>
@@ -114,7 +153,19 @@ function App() {
       />
       <button onClick={addFlavor}>Agregar Sabor</button>
 
-      {/* Componente para solicitar cambio de carbones */}
+      {/* Botón para solicitar cambio de carbones */}
+      <h2>Solicitar Cambio de Carbones</h2>
+      <button onClick={sendCoalRequest}>Solicitar Cambio</button>
+
+      {/* Mostrar solicitudes de cambio de carbones */}
+      <h2>Solicitudes de Cambio de Carbones</h2>
+      <ul>
+        {coalRequests.map((request) => (
+          <li key={request.tableId}>Mesa {request.tableId}</li>
+        ))}
+      </ul>
+
+      {/* Componente existente */}
       <CoalChangeRequest />
     </div>
   );

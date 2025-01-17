@@ -1,4 +1,5 @@
 import express from 'express';
+
 import { getPool } from '../config/db.js';
 
 const router = express.Router();
@@ -106,4 +107,5 @@ router.delete('/:category/:id', async (req, res) => {
   }
 });
 
-export default router;
+export default router;  // Exportación por defecto
+

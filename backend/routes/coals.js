@@ -1,10 +1,9 @@
 import express from 'express';
-
 const router = express.Router();
 
 // Solicitar cambio de carbones
 router.post('/', (req, res) => {
-  const { customerId, coalId } = req.body;  // Suponemos que recibimos estos datos
+  const { customerId } = req.body;  // Suponemos que recibimos estos datos
 
   // Enviar la notificación de solicitud de cambio de carbones
   res.json({
@@ -12,4 +11,5 @@ router.post('/', (req, res) => {
   });
 });
 
-export default router;
+export default router;  // Exportación por defecto
+

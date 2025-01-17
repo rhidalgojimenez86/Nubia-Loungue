@@ -1,9 +1,12 @@
+
 import dotenv from 'dotenv';
 import mysql from 'mysql2/promise';
+
 
 dotenv.config(); // Carga las variables del archivo .env
 
 let pool;
+
 
 export const getPool = async () => {
   if (!pool) {

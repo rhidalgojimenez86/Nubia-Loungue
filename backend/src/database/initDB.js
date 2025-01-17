@@ -1,3 +1,4 @@
+
 import bcrypt from "bcrypt";
 import getPool from "./getPool.js";
 import {
@@ -24,7 +25,17 @@ async function createTables() {
     await pool.query(`USE ${MYSQL_DATABASE}`);
 
     // Eliminar tablas existentes si las hay
-    await pool.query(`DROP TABLE IF EXISTS sweet_flavors, citrus_flavors, premium_flavors, users`);
+    await pool.query(`DROP TABLE IF EXISTS sweet_flavors, citrus_flavors, premium_flavors, users, tables`);
+
+    // Crear tabla de mesas
+    await pool.query(`
+      CREATE TABLE IF NOT EXISTS tables (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        tableNumber INT UNIQUE NOT NULL,
+        status ENUM('occupied', 'free') DEFAULT 'free', 
+        createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      )
+    `);
 
     // Crear tabla de usuarios
     await pool.query(`
