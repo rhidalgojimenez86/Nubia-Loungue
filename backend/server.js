@@ -4,6 +4,9 @@ import dotenv from 'dotenv';
 import http from 'http';
 import { Server as socketIo } from 'socket.io';
 import getPool from '../backend/src/database/getPool.js';  // Asegúrate de usar la extensión .js en la importación
+import flavorsRoutes from './routes/flavors.js';
+import ordersRoutes from './routes/orders.js';
+import coalsRoutes from './routes/coals.js';
 
 // Cargar las variables de entorno
 dotenv.config();  
@@ -24,11 +27,6 @@ const PORT = process.env.PORT || 5000;
 // Middleware
 app.use(cors());
 app.use(express.json());
-
-// Importar rutas
-import flavorsRoutes from './routes/flavors.js';
-import ordersRoutes from './routes/orders.js';
-import coalsRoutes from './routes/coals.js';
 
 // Registrar rutas
 app.use('/api/flavors', flavorsRoutes);
@@ -105,6 +103,9 @@ io.on('connection', (socket) => {
 // Middleware de manejo de errores
 app.use((err, req, res, next) => {
   console.error(err);  // Registrar el error en la consola
+// Middleware de manejo de errores
+app.use((err, req, res, next) => {
+  console.error(err); // Registrar el error en la consola
   const status = err.status || 500;
   const message = err.message || 'Error interno del servidor';
   res.status(status).json({ error: message });

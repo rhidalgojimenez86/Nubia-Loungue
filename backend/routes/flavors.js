@@ -1,97 +1,111 @@
 import express from 'express';
-import connection from '../config/db.js';  // Asegúrate de que db.js sea un módulo ES también
+
+import { getPool } from '../config/db.js';
 
 const router = express.Router();
 
-// Obtener todos los sabores de las tres categorías
-router.get('/', (req, res) => {
-  const queryCitrus = 'SELECT * FROM citrus_flavors';
-  const queryPremium = 'SELECT * FROM premium_flavors';
-  const querySweet = 'SELECT * FROM sweet_flavors';
+const getTableByCategory = (category) => {
+  switch (category) {
+    case 'citrus': return 'citrus_flavors';
+    case 'premium': return 'premium_flavors';
+    case 'sweet': return 'sweet_flavors';
+    default: return null;
+  }
+};
 
-  connection.query(queryCitrus, (err, citrusResults) => {
-    if (err) {
-      return res.status(500).json({ error: 'Error al obtener los sabores cítricos' });
-    }
+// Obtener todos los sabores
+router.get('/', async (req, res) => {
+  try {
+    const pool = await getPool();
+    const [citrusResults, premiumResults, sweetResults] = await Promise.all([
+      pool.query('SELECT * FROM citrus_flavors'),
+      pool.query('SELECT * FROM premium_flavors'),
+      pool.query('SELECT * FROM sweet_flavors'),
+    ]);
 
-    connection.query(queryPremium, (err, premiumResults) => {
-      if (err) {
-        return res.status(500).json({ error: 'Error al obtener los sabores premium' });
-      }
-
-      connection.query(querySweet, (err, sweetResults) => {
-        if (err) {
-          return res.status(500).json({ error: 'Error al obtener los sabores dulces' });
-        }
-
-        // Combinar los resultados de las tres categorías
-        const allFlavors = {
-          citrus: citrusResults,
-          premium: premiumResults,
-          sweet: sweetResults
-        };
-
-        res.json(allFlavors);
-      });
+    res.json({
+      citrus: citrusResults[0],
+      premium: premiumResults[0],
+      sweet: sweetResults[0],
     });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener los sabores', details: err.message });
+  }
 });
 
-// Agregar un nuevo sabor en una categoría
-router.post('/:category', (req, res) => {
+// Agregar un sabor
+router.post('/:category', async (req, res) => {
   const { category } = req.params;
   const { name, description, price, status } = req.body;
 
-  // Determinar la tabla en función de la categoría
-  let table;
-  if (category === 'citrus') {
-    table = 'citrus_flavors';
-  } else if (category === 'premium') {
-    table = 'premium_flavors';
-  } else if (category === 'sweet') {
-    table = 'sweet_flavors';
-  } else {
+  const table = getTableByCategory(category);
+  if (!table) {
     return res.status(400).json({ error: 'Categoría no válida' });
   }
 
-  const query = `INSERT INTO ${table} (name, description, price, status) VALUES (?, ?, ?, ?)`;
-
-  connection.query(query, [name, description, price, status], (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: 'Error al agregar el sabor' });
-    }
-    res.status(201).json({ message: 'Sabor agregado con éxito', id: results.insertId });
-  });
+  try {
+    const pool = await getPool();
+    const [result] = await pool.query(
+      `INSERT INTO ${table} (name, description, price, status) VALUES (?, ?, ?, ?)`,
+      [name, description, price, status],
+    );
+    res.status(201).json({ message: 'Sabor agregado con éxito', id: result.insertId });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al agregar el sabor', details: err.message });
+  }
 });
 
-// Actualizar un sabor en una categoría
-router.put('/:category/:id', (req, res) => {
+// Actualizar un sabor
+router.put('/:category/:id', async (req, res) => {
   const { category, id } = req.params;
   const { name, description, price, status } = req.body;
 
-  // Determinar la tabla en función de la categoría
-  let table;
-  if (category === 'citrus') {
-    table = 'citrus_flavors';
-  } else if (category === 'premium') {
-    table = 'premium_flavors';
-  } else if (category === 'sweet') {
-    table = 'sweet_flavors';
-  } else {
+  const table = getTableByCategory(category);
+  if (!table) {
     return res.status(400).json({ error: 'Categoría no válida' });
   }
 
-  const query = `UPDATE ${table} SET name = ?, description = ?, price = ?, status = ? WHERE id = ?`;
-
-  connection.query(query, [name, description, price, status, id], (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: 'Error al actualizar el sabor' });
-    }
-    if (results.affectedRows === 0) {
+  try {
+    const pool = await getPool();
+    const [result] = await pool.query(
+      `UPDATE ${table} SET name = ?, description = ?, price = ?, status = ? WHERE id = ?`,
+      [name, description, price, status, id],
+    );
+    if (result.affectedRows === 0) {
       return res.status(404).json({ error: 'Sabor no encontrado' });
     }
     res.json({ message: 'Sabor actualizado con éxito' });
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al actualizar el sabor', details: err.message });
+  }
+});
+
+// Eliminar un sabor
+router.delete('/:category/:id', async (req, res) => {
+  const { category, id } = req.params;
+
+  const table = getTableByCategory(category);
+  if (!table) {
+    return res.status(400).json({ error: 'Categoría no válida' });
+  }
+
+  try {
+    const pool = await getPool();
+    const [result] = await pool.query(`DELETE FROM ${table} WHERE id = ?`, [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: 'Sabor no encontrado' });
+    }
+
+    res.json({ message: 'Sabor eliminado con éxito' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al eliminar el sabor', details: err.message });
+  }
 });
 
 export default router;  // Exportación por defecto
+
