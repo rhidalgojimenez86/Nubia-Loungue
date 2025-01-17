@@ -1,8 +1,16 @@
+import dotenv from 'dotenv';
+dotenv.config();  // Cargar las variables de entorno antes de cualquier otra cosa
+
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import http from 'http';
 import { Server as socketIo } from 'socket.io';
+
+import { createTables } from './src/database/initDB.js';
+
+// Llamamos a la función para crear las tablas al arrancar el servidor
+createTables();
+
 import getPool from '../backend/src/database/getPool.js';  // Asegúrate de usar la extensión .js en la importación
 import flavorsRoutes from './routes/flavors.js';
 import ordersRoutes from './routes/orders.js';
@@ -15,10 +23,10 @@ const app = express();
 const server = http.createServer(app);  // Usamos el servidor HTTP para Socket.io
 const io = new socketIo(server, {
   cors: {
-      origin: "*",  // Permite conexiones desde cualquier origen
-      methods: ["GET", "POST"],
-      allowedHeaders: ["my-custom-header"],
-      credentials: true,
+    origin: ["http://localhost:5173"], // Aquí pones la URL de tu frontend
+    methods: ["GET", "POST"],
+    allowedHeaders: ["my-custom-header"],
+    credentials: true,
   }
 });
 
@@ -57,7 +65,7 @@ io.on('connection', (socket) => {
         await pool.query('UPDATE tables SET status = "occupied" WHERE tableNumber = ?', [tableId]);
 
         // Emitir la solicitud a todos los clientes conectados (incluyendo al jefe)
-        io.emit('coal-request', data);
+        io.emit('coal_request', data);
         console.log(`Mesa ${tableId} ha pedido ${requestType}`);
       } else {
         console.log(`Mesa ${tableId} ya está ocupada`);
