@@ -36,10 +36,17 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// Importar rutas
+import flavorsRoutes from './routes/flavors.js';
+import ordersRoutes from './routes/orders.js';
+import coalsRoutes from './routes/coals.js';
+import tablesRoutes from '../backend/routes/tables.js'; //Nueva ruta para las mesas
+
 // Registrar rutas
 app.use('/api/flavors', flavorsRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/coals', coalsRoutes);
+app.use('/api/tables', tablesRoutes); // Registrar rutas de mesas
 
 // Ruta de prueba
 app.get('/', (req, res) => {
