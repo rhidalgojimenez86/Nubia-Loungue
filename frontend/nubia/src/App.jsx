@@ -117,17 +117,20 @@ function App() {
         <ul>
           {flavors.citrus.map((flavor) => (
             <li key={flavor.id}>
-              {flavor.name} - {flavor.price}
+              <strong>{flavor.name}</strong> - {flavor.price}$
+              <p>{flavor.description}</p> {/* Muestra la descripción */}
             </li>
           ))}
         </ul>
       </div>
+
       <div>
         <h2>Sweet</h2>
         <ul>
           {flavors.sweet.map((flavor) => (
             <li key={flavor.id}>
-              {flavor.name} - {flavor.price}
+              <strong>{flavor.name}</strong> - {flavor.price}$
+              <p>{flavor.description}</p> {/* Muestra la descripción */}
             </li>
           ))}
         </ul>
@@ -137,7 +140,8 @@ function App() {
         <ul>
           {flavors.premium.map((flavor) => (
             <li key={flavor.id}>
-              {flavor.name} - {flavor.price}
+              <strong>{flavor.name}</strong> - {flavor.price}$
+              <p>{flavor.description}</p> {/* Muestra la descripción */}
             </li>
           ))}
         </ul>

@@ -1,4 +1,4 @@
-import bcrypt from 'bcryptjs'; // Asegúrate de importar bcrypt correctamente
+import bcrypt from 'bcryptjs';  // Asegúrate de importar bcrypt correctamente
 import getPool from "./getPool.js"; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
 
 export async function createTables() {
@@ -10,6 +10,25 @@ export async function createTables() {
   const ADMIN_FIRST_NAME = process.env.ADMIN_FIRST_NAME;
   const ADMIN_LAST_NAME = process.env.ADMIN_LAST_NAME;
 
+import {
+  MYSQL_DATABASE,
+  ADMIN_EMAIL,
+  ADMIN_PASSWORD,
+  ADMIN_FIRST_NAME,
+  ADMIN_LAST_NAME,
+} from "../../env.js";
+
+async function createDB() {
+  try {
+    const pool = await getPool();
+    await pool.query(`CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE}`);
+    console.log("Base de datos creada o ya existente");
+  } catch (error) {
+    throw new Error("Error al crear la base de datos", { cause: error });
+  }
+}
+
+async function createTables() {
   try {
     const MYSQL_DATABASE = process.env.MYSQL_DATABASE;
 
@@ -79,12 +98,13 @@ export async function createTables() {
 
     console.log("Tablas creadas correctamente");
 
-    // Insertar un usuario administrador
+    // Insertar un usuario administrador con placeholders
     const hashedPass = await bcrypt.hash(ADMIN_PASSWORD, 10);
     await pool.query(`
       INSERT INTO users (email, firstName, lastName, password, role)
       VALUES ("${ADMIN_EMAIL}", "${ADMIN_FIRST_NAME}", "${ADMIN_LAST_NAME}", "${hashedPass}", "admin")
     `);
+
     console.log("Usuario administrador insertado");
 
     // Insertar 10 mesas
@@ -130,3 +150,15 @@ export async function createTables() {
     throw new Error("Error al crear las tablas", { cause: error });
   }
 }
+
+async function initDB() {
+  try {
+    await createDB();
+    await createTables();
+    console.log("Base de datos inicializada correctamente");
+  } catch (error) {
+    console.error("Error al inicializar la base de datos:", error.message);
+  }
+}
+
+initDB();

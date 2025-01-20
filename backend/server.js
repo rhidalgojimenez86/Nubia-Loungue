@@ -5,11 +5,19 @@ import express from 'express';
 import cors from 'cors';
 import http from 'http';
 import { Server as socketIo } from 'socket.io';
-import getPool from './src/database/getPool.js'; // Asegúrate de usar la extensión .js en la importación
+
 import { createTables } from './src/database/initDB.js';
 
 // Llamamos a la función para crear las tablas al arrancar el servidor
 createTables();
+
+import getPool from '../backend/src/database/getPool.js';  // Asegúrate de usar la extensión .js en la importación
+import flavorsRoutes from './routes/flavors.js';
+import ordersRoutes from './routes/orders.js';
+import coalsRoutes from './routes/coals.js';
+
+// Cargar las variables de entorno
+dotenv.config();  
 
 const app = express();
 const server = http.createServer(app);  // Usamos el servidor HTTP para Socket.io
@@ -110,6 +118,9 @@ io.on('connection', (socket) => {
 // Middleware de manejo de errores
 app.use((err, req, res, next) => {
   console.error(err);  // Registrar el error en la consola
+// Middleware de manejo de errores
+app.use((err, req, res, next) => {
+  console.error(err); // Registrar el error en la consola
   const status = err.status || 500;
   const message = err.message || 'Error interno del servidor';
   res.status(status).json({ error: message });
