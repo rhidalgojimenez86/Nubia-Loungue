@@ -11,10 +11,6 @@ import { createTables } from './src/database/initDB.js';
 // Llamamos a la función para crear las tablas al arrancar el servidor
 createTables();
 
-
-// Cargar las variables de entorno
-dotenv.config();  
-
 const app = express();
 const server = http.createServer(app);  // Usamos el servidor HTTP para Socket.io
 const io = new socketIo(server, {
@@ -36,11 +32,13 @@ app.use(express.json());
 import flavorsRoutes from './routes/flavors.js';
 import ordersRoutes from './routes/orders.js';
 import coalsRoutes from './routes/coals.js';
+import tablesRoutes from '../backend/routes/tables.js'; //Nueva ruta para las mesas
 
 // Registrar rutas
 app.use('/api/flavors', flavorsRoutes);
 app.use('/api/orders', ordersRoutes);
 app.use('/api/coals', coalsRoutes);
+app.use('/api/tables', tablesRoutes); // Registrar rutas de mesas
 
 // Ruta de prueba
 app.get('/', (req, res) => {

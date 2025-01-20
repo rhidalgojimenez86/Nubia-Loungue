@@ -22,6 +22,7 @@ function App() {
 
   const [coalRequests, setCoalRequests] = useState([]); // Solicitudes de cambio de carbones
   const [isConnected, setIsConnected] = useState(false); // Estado de la conexión WebSocket
+  const [qrCodes, setQrCodes] = useState([]); // Estado para almacenar los QR de las mesas
 
   // Función para obtener los sabores desde el backend
   const fetchFlavors = async () => {
@@ -47,6 +48,16 @@ function App() {
       fetchFlavors();
     } catch (error) {
       console.error("Error al agregar el sabor", error);
+    }
+  };
+
+  // Función para obtener los códigos QR desde el backend
+  const fetchQRCodes = async () => {
+    try {
+      const { data } = await axios.get("http://localhost:5000/api/tables/qr");
+      setQrCodes(data); // Suponiendo que el backend devuelve un arreglo de QR con su mesa correspondiente
+    } catch (error) {
+      console.error("Error al obtener los códigos QR", error);
     }
   };
 
@@ -93,6 +104,7 @@ function App() {
 
   useEffect(() => {
     fetchFlavors();
+    fetchQRCodes(); // Obtener los códigos QR al cargar la aplicación
   }, []);
 
   return (
@@ -169,6 +181,18 @@ function App() {
             <button onClick={() => confirmCoalRequest(request.tableId)}>
               Confirmar
             </button>
+          </li>
+        ))}
+      </ul>
+
+      {/* Mostrar códigos QR generados */}
+      <h2>Códigos QR de las Mesas</h2>
+      <ul>
+        {qrCodes.map((qr, index) => (
+          <li key={index}>
+            Mesa {qr.tableNumber}
+            <br />
+            <img src={qr.qrCode} alt={`QR Mesa ${qr.tableNumber}`} />
           </li>
         ))}
       </ul>
