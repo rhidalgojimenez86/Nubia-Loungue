@@ -117,9 +117,6 @@ io.on('connection', (socket) => {
 
 // Middleware de manejo de errores
 app.use((err, req, res, next) => {
-  console.error(err);  // Registrar el error en la consola
-// Middleware de manejo de errores
-app.use((err, req, res, next) => {
   console.error(err); // Registrar el error en la consola
   const status = err.status || 500;
   const message = err.message || 'Error interno del servidor';

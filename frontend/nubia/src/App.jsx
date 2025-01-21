@@ -109,11 +109,10 @@ function App() {
 
   return (
     <div>
-      <h1>{isConnected ? "Conexión WebSocket exitosa" : "Conectando..."}</h1>
-
+      <h1>Sabores</h1>
       {/* Mostrar los sabores de cada categoría */}
       <div>
-        <h2>Citrus</h2>
+        <h2>Cítricos</h2>
         <ul>
           {flavors.citrus.map((flavor) => (
             <li key={flavor.id}>
@@ -125,7 +124,7 @@ function App() {
       </div>
 
       <div>
-        <h2>Sweet</h2>
+        <h2>Dulces</h2>
         <ul>
           {flavors.sweet.map((flavor) => (
             <li key={flavor.id}>
@@ -178,7 +177,7 @@ function App() {
       {/* Mostrar solicitudes de cambio de carbones */}
       <h2>Solicitudes de Cambio de Carbones</h2>
       <ul>
-        {coalRequests.map((request) => (
+        {coalRequests.slice(0, 2).map((request) => (
           <li key={request.tableId}>
             Mesa {request.tableId} solicitó cambio de carbones
             {/* Botón para que el camarero confirme la solicitud */}
