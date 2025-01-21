@@ -1,4 +1,5 @@
-import bcrypt from 'bcryptjs'; // Asegúrate de importar bcrypt correctamente
+import bcrypt from 'bcryptjs';  // Asegúrate de importar bcrypt correctamente
+
 import getPool from "./getPool.js"; // Asegúrate de que la ruta sea correcta según tu estructura de carpetas
 
 export async function createTables() {
@@ -85,6 +86,7 @@ export async function createTables() {
       INSERT INTO users (email, firstName, lastName, password, role)
       VALUES ("${ADMIN_EMAIL}", "${ADMIN_FIRST_NAME}", "${ADMIN_LAST_NAME}", "${hashedPass}", "admin")
     `);
+
     console.log("Usuario administrador insertado");
 
     // Insertar 10 mesas
