@@ -23,6 +23,14 @@ function App() {
   const [coalRequests, setCoalRequests] = useState([]); // Solicitudes de cambio de carbones
   const [isConnected, setIsConnected] = useState(false); // Estado de la conexión WebSocket
   const [qrCodes, setQrCodes] = useState([]); // Estado para almacenar los QR de las mesas
+  const [isAdmin, setIsAdmin] = useState(false); // Estado para identificar si el usuario es admin
+
+  // Simulación de rol (Admin o cliente)
+  useEffect(() => {
+    // Aquí deberías reemplazar esto con lógica real para verificar si el usuario es admin
+    const userRole = localStorage.getItem("userRole") || "client"; // Ejemplo: "admin" o "client"
+    setIsAdmin(userRole === "admin");
+  }, []);
 
   // Función para obtener los sabores desde el backend
   const fetchFlavors = async () => {
@@ -143,29 +151,37 @@ function App() {
         </ul>
       </div>
 
-      {/* Formulario para agregar un nuevo sabor */}
-      <h2>Agregar nuevo sabor</h2>
-      <input
-        type="text"
-        placeholder="Nombre"
-        value={newFlavor.name}
-        onChange={(e) => setNewFlavor({ ...newFlavor, name: e.target.value })}
-      />
-      <input
-        type="text"
-        placeholder="Descripción"
-        value={newFlavor.description}
-        onChange={(e) =>
-          setNewFlavor({ ...newFlavor, description: e.target.value })
-        }
-      />
-      <input
-        type="text"
-        placeholder="Precio"
-        value={newFlavor.price}
-        onChange={(e) => setNewFlavor({ ...newFlavor, price: e.target.value })}
-      />
-      <button onClick={addFlavor}>Agregar Sabor</button>
+      {/* Formulario para agregar un nuevo sabor (visible solo para admin) */}
+      {isAdmin && (
+        <>
+          <h2>Agregar nuevo sabor</h2>
+          <input
+            type="text"
+            placeholder="Nombre"
+            value={newFlavor.name}
+            onChange={(e) =>
+              setNewFlavor({ ...newFlavor, name: e.target.value })
+            }
+          />
+          <input
+            type="text"
+            placeholder="Descripción"
+            value={newFlavor.description}
+            onChange={(e) =>
+              setNewFlavor({ ...newFlavor, description: e.target.value })
+            }
+          />
+          <input
+            type="text"
+            placeholder="Precio"
+            value={newFlavor.price}
+            onChange={(e) =>
+              setNewFlavor({ ...newFlavor, price: e.target.value })
+            }
+          />
+          <button onClick={addFlavor}>Agregar Sabor</button>
+        </>
+      )}
 
       {/* Botón para solicitar cambio de carbones */}
       <h2>Solicitar Cambio de Carbones</h2>
@@ -188,14 +204,14 @@ function App() {
       {/* Mostrar códigos QR generados */}
       <h2>Códigos QR de las Mesas</h2>
       <ul>
-        {qrCodes.map((qr, index) => (
-          <li key={index}>
-            Mesa {qr.tableNumber}
-            <br />
-            <img src={qr.qrCode} alt={`QR Mesa ${qr.tableNumber}`} />
-          </li>
-        ))}
-      </ul>
+  {qrCodes.map((qr) => (
+    <li key={qr.tableNumber}>
+      Mesa {qr.tableNumber}
+      <br />
+      <img src={qr.qrCode} alt={`QR Mesa ${qr.tableNumber}`} />
+    </li>
+  ))}
+</ul>
     </div>
   );
 }
