@@ -47,6 +47,8 @@ const CoalRequests = () => {
     <div>
       <h2>Solicitar Cambio de Carbones</h2>
       <button onClick={sendCoalRequest}>Solicitar Cambio</button>
+      
+      {isConnected ? <p>Conectado al servidor WebSocket</p> : <p>Desconectado del servidor WebSocket</p>}
 
       <h2>Solicitudes de Cambio de Carbones</h2>
       <ul>
