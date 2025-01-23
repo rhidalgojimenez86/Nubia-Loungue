@@ -42,6 +42,7 @@ const Flavors = () => {
           flavorName,
         ]);
       } else {
+        // Si ya está seleccionado, lo desmarcamos
         alert("Puedes seleccionar un máximo de 3 sabores.");
       }
     }
@@ -130,6 +131,7 @@ const Flavors = () => {
         <DialogTitle>Pedido Realizado</DialogTitle>
         <DialogContent>
           <p>Pedido realizado con los siguientes sabores: {selectedFlavors.join(", ")}</p>
+
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelOrder} color="secondary">

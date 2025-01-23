@@ -23,11 +23,11 @@ function App() {
     <div>
       <Flavors />
       <CoalRequests />
-      
+
       <h2>Códigos QR de las Mesas</h2>
       <ul>
-        {qrCodes.map((qr, index) => (
-          <li key={index}>
+        {qrCodes.map((qr) => (
+          <li key={qr.tableNumber}>
             Mesa {qr.tableNumber}
             <br />
             <img src={qr.qrCode} alt={`QR Mesa ${qr.tableNumber}`} />
