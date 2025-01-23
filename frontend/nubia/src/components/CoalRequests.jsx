@@ -31,10 +31,9 @@ const CoalRequests = () => {
 
   const sendCoalRequest = () => {
     const tableId = prompt("Ingrese el número de la mesa");
-    const requestType = prompt("Ingrese el tipo de solicitud (Carbón/Sisha)");
-    if (tableId && requestType) {
-      socket.emit("new-coal-request", { tableId, requestType });
-      alert("Solicitud de cambio de carbones enviada.");
+    if (tableId) {
+      socket.emit("new-coal-request", { tableId, requestType: "Carbón" });
+      alert(`Solicitud de cambio de carbones enviada para la mesa ${tableId}.`);
     }
   };
 
@@ -47,8 +46,6 @@ const CoalRequests = () => {
     <div>
       <h2>Solicitar Cambio de Carbones</h2>
       <button onClick={sendCoalRequest}>Solicitar Cambio</button>
-
-      <h2>Solicitudes de Cambio de Carbones</h2>
       <ul>
         {coalRequests.slice(0, 2).map((request) => (
           <li key={request.tableId}>
