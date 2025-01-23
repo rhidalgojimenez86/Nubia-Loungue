@@ -1,12 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-import {
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-} from "@mui/material";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 
 const Flavors = () => {
   const [flavors, setFlavors] = useState({
@@ -136,10 +130,8 @@ const Flavors = () => {
       <Dialog open={showModal} onClose={handleCancelOrder}>
         <DialogTitle>Pedido Realizado</DialogTitle>
         <DialogContent>
-          <p>
-            Pedido realizado con los siguientes sabores:{" "}
-            {selectedFlavors.join(", ")}
-          </p>
+          <p>Pedido realizado con los siguientes sabores: {selectedFlavors.join(", ")}</p>
+
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCancelOrder} color="secondary">
