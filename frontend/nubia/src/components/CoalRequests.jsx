@@ -29,6 +29,15 @@ const CoalRequests = () => {
     };
   }, []);
 
+  // Monitorear los cambios de conexión y registrar en la consola
+  useEffect(() => {
+    if (isConnected) {
+      console.log("El cliente está conectado al servidor WebSocket.");
+    } else {
+      console.log("El cliente está desconectado del servidor WebSocket.");
+    }
+  }, [isConnected]);
+
   const sendCoalRequest = () => {
     const tableId = prompt("Ingrese el número de la mesa");
     const requestType = prompt("Ingrese el tipo de solicitud (Carbón/Sisha)");
@@ -64,4 +73,3 @@ const CoalRequests = () => {
 };
 
 export default CoalRequests;
-
