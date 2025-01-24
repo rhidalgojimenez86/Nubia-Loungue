@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
 
 const Flavors = () => {
   const [flavors, setFlavors] = useState({
@@ -8,13 +9,7 @@ const Flavors = () => {
     sweet: [],
   });
   const [selectedFlavors, setSelectedFlavors] = useState([]);
-  const [newFlavor, setNewFlavor] = useState({
-    category: "sweet",
-    name: "",
-    description: "",
-    price: "",
-    status: "available",
-  });
+  const [showModal, setShowModal] = useState(false);
 
   // Obtener sabores desde el backend
   const fetchFlavors = async () => {
@@ -26,54 +21,53 @@ const Flavors = () => {
     }
   };
 
-  // Agregar nuevo sabor
-  const addFlavor = async () => {
-    try {
-      const { category, name, description, price, status } = newFlavor;
-      await axios.post(`http://localhost:5000/api/flavors/${category}`, {
-        name,
-        description,
-        price,
-        status,
-      });
-      alert("Sabor agregado con éxito");
-      fetchFlavors();
-    } catch (error) {
-      console.error("Error al agregar el sabor", error);
-    }
-  };
+  // Obtener sabores al cargar el componente
+  useEffect(() => {
+    fetchFlavors();
+  }, []);
 
   // Manejar la selección de sabores
   const handleFlavorSelection = (flavorName) => {
-    setSelectedFlavors((prevSelectedFlavors) =>
-      prevSelectedFlavors.includes(flavorName)
-        ? prevSelectedFlavors.filter((name) => name !== flavorName)
-        : [...prevSelectedFlavors, flavorName]
-    );
+    // Limitar la selección a un máximo de 3 sabores
+    if (selectedFlavors.includes(flavorName)) {
+      // Si ya está seleccionado, lo desmarcamos
+      setSelectedFlavors((prevSelectedFlavors) =>
+        prevSelectedFlavors.filter((name) => name !== flavorName)
+      );
+    } else {
+      // Si no está seleccionado, verificamos que no exceda 3 sabores
+      if (selectedFlavors.length < 3) {
+        setSelectedFlavors((prevSelectedFlavors) => [
+          ...prevSelectedFlavors,
+          flavorName,
+        ]);
+      } else {
+        // Si ya está seleccionado, lo desmarcamos
+        alert("Puedes seleccionar un máximo de 3 sabores.");
+      }
+    }
   };
 
   // Realizar pedido
   const sendOrder = () => {
-    // Validación: no permitir más de 3 sabores
-    if (selectedFlavors.length > 3) {
-      alert("Error: sólo está permitido seleccionar un máximo de 3 sabores");
-      return;
-    }
-
     if (selectedFlavors.length > 0) {
-      console.log("Pedido realizado con los siguientes sabores:", selectedFlavors);
-      alert(`Pedido realizado con los siguientes sabores: ${selectedFlavors.join(", ")}`);
-      
-      // Limpiar sabores seleccionados después de realizar el pedido
-      setSelectedFlavors([]);
+      setShowModal(true); // Mostrar el modal de confirmación
     } else {
       alert("Por favor, selecciona al menos un sabor.");
     }
   };
 
-  useEffect(() => {
-    fetchFlavors();
-  }, []);
+  // Confirmar el pedido
+  const handleConfirmOrder = () => {
+    alert(`Genial, en seguida tendrás tu shisha en la mesa`);
+    setShowModal(false); // Cerrar el modal
+    setSelectedFlavors([]); // Limpiar los sabores seleccionados
+  };
+
+  // Cancelar el pedido
+  const handleCancelOrder = () => {
+    setShowModal(false); // Cerrar el modal sin hacer cambios
+  };
 
   return (
     <div>
@@ -132,32 +126,24 @@ const Flavors = () => {
 
       <button onClick={sendOrder}>Realizar Pedido</button>
 
-      <h2>Agregar nuevo sabor</h2>
-      <input
-        type="text"
-        placeholder="Nombre"
-        value={newFlavor.name}
-        onChange={(e) => setNewFlavor({ ...newFlavor, name: e.target.value })}
-      />
-      <input
-        type="text"
-        placeholder="Descripción"
-        value={newFlavor.description}
-        onChange={(e) =>
-          setNewFlavor({ ...newFlavor, description: e.target.value })
-        }
-      />
-      <input
-        type="text"
-        placeholder="Precio"
-        value={newFlavor.price}
-        onChange={(e) => setNewFlavor({ ...newFlavor, price: e.target.value })}
-      />
-      <button onClick={addFlavor}>Agregar Sabor</button>
+      {/* Modal de confirmación de pedido */}
+      <Dialog open={showModal} onClose={handleCancelOrder}>
+        <DialogTitle>Pedido Realizado</DialogTitle>
+        <DialogContent>
+          <p>Pedido realizado con los siguientes sabores: {selectedFlavors.join(", ")}</p>
+
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCancelOrder} color="secondary">
+            Cancelar
+          </Button>
+          <Button onClick={handleConfirmOrder} color="primary">
+            Aceptar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };
 
 export default Flavors;
-
-
