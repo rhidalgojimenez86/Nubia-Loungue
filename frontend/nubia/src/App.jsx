@@ -1,7 +1,8 @@
-import Flavors from "./components/Flavors";
+import FlavorList from "./components/FlavorList";
 import CoalRequests from "./components/CoalRequests";
 import { useState, useEffect } from "react";
 import axios from "axios";
+
 
 function App() {
   const [qrCodes, setQrCodes] = useState([]);
@@ -21,8 +22,10 @@ function App() {
 
   return (
     <div>
-      <Flavors />
+      <FlavorList />
       <CoalRequests />
+    
+
 
       <h2>Códigos QR de las Mesas</h2>
       <ul>
@@ -36,6 +39,7 @@ function App() {
       </ul>
     </div>
   );
+  
 }
 
 export default App;
