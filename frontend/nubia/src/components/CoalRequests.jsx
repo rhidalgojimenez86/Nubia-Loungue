@@ -53,8 +53,11 @@ const CoalRequests = () => {
 
   return (
     <div>
-      <h2>Solicitar Cambio de Carbones</h2>
-      <button onClick={sendCoalRequest}>Solicitar Cambio</button>
+      <h2 className="text-xl font-bold text-center mb-6">Solicitar Cambio de Carbones</h2>
+      <button onClick={sendCoalRequest}
+      className="mt-4 w-full bg-black text-white py-3 rounded-lg font-semibold active:bg-gray-700 transition-all duration-300"
+      
+      >Solicitar Cambio</button>
       
       {isConnected ? <p>Conectado al servidor WebSocket</p> : <p>Desconectado del servidor WebSocket</p>}
 

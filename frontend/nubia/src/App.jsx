@@ -1,5 +1,8 @@
 import FlavorList from "./components/FlavorList";
 import CoalRequests from "./components/CoalRequests";
+import Header from "./components/Header";
+import MainSection from "./components/MainSection";
+import Footer from "./components/Footer";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -22,10 +25,11 @@ function App() {
 
   return (
     <div>
+      <Header />
+      <MainSection />
       <FlavorList />
       <CoalRequests />
-    
-
+      <Footer />
 
       <h2>Códigos QR de las Mesas</h2>
       <ul>

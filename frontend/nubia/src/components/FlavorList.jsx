@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button } from "@mui/material";
@@ -18,7 +17,7 @@ const FlavorList = () => {
     axios.get("http://localhost:5000/api/flavors")
       .then((response) => {
         const data = response.data;
-        console.log("Datos recibidos desde la API:", data); // Verifica la estructura de los datos
+        console.log("Datos recibidos desde la API:", data);
 
         // Asegúrate de que data tenga las categorías
         if (data && data.citrus && data.sweet && data.premium) {
@@ -68,11 +67,6 @@ const FlavorList = () => {
     setShowModal(false); // Solo cierra el modal, sin limpiar selección
   };
 
-  // Verifica si los sabores se cargaron correctamente
-  useEffect(() => {
-    console.log("Sabores por categoria:", flavors);
-  }, [flavors]);
-
   return (
     <div className="max-w-lg mx-auto p-4">
       <h2 className="text-xl font-bold text-center mb-6">Sabores (Máximo 3 a elegir)</h2>
@@ -97,11 +91,12 @@ const FlavorList = () => {
         </div>
       ))}
 
-      <button 
-        className="mt-6 w-full p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+      {/* Botón directamente en FlavorList */}
+      <button
         onClick={sendOrder}
+        className="mt-4 w-full bg-black text-white py-3 rounded-lg font-semibold active:bg-gray-700 transition-all duration-300"
       >
-        Realizar Pedido
+        Realizar pedido
       </button>
 
       {/* Modal de confirmación */}
@@ -124,5 +119,3 @@ const FlavorList = () => {
 };
 
 export default FlavorList;
-
-
