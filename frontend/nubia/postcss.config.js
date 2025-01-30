@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 export default {
   plugins: {
     tailwindcss: {},
@@ -6,3 +7,12 @@ export default {
 };
 
 
+=======
+export default  {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    },
+  };
+  
+>>>>>>> Stashed changes
