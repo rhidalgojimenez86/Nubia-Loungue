@@ -16,8 +16,10 @@ const MainSection = () => {
           <p className="mt-2 text-sm">Sabores</p>
         </button>
 
-        {/* Botón Carbones (puedes agregar una navegación si lo necesitas) */}
-        <button className="flex flex-col items-center bg-white shadow-md p-4 rounded-lg">
+        {/* Botón Carbones con navegación */}
+        <button 
+        onClick={() => navigate("/carbones")}
+        className="flex flex-col items-center bg-white shadow-md p-4 rounded-lg">
           <span className="text-4xl">🔥</span>
           <p className="mt-2 text-sm">Carbones</p>
         </button>
