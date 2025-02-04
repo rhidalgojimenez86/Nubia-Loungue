@@ -51,28 +51,34 @@ const CoalRequests = () => {
     alert(`Mesa ${tableId} marcada como libre.`);
   };
 
-  return (
-    <div>
-      <h2 className="text-xl font-bold text-center mb-6">Solicitar Cambio de Carbones</h2>
-      <button onClick={sendCoalRequest}
-      className="mt-4 w-full bg-black text-white py-3 rounded-lg font-semibold active:bg-gray-700 transition-all duration-300"
-       >Solicitar Cambio</button>
-      
-      {isConnected ? <p>Conectado al servidor WebSocket</p> : <p>Desconectado del servidor WebSocket</p>}
-
- 
-      <ul>
-        {coalRequests.slice(0, 2).map((request) => (
-          <li key={request.tableId}>
-            Mesa {request.tableId} solicitó cambio de carbones
-            <button onClick={() => confirmCoalRequest(request.tableId)}>
-              Confirmar
-            </button>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
+    return (
+      <div className="page-container">
+        <h2 className="text-center text-xl font-bold">Solicitar Cambio de Carbones</h2>
+        <button 
+          onClick={sendCoalRequest}
+          className="mt-4 px-4 py-2 bg-black text-white rounded"
+        >
+          Solicitar Cambio
+        </button>
+  
+        {isConnected ? <p>Conectado al servidor WebSocket</p> : <p>Desconectado del servidor WebSocket</p>}
+  
+        <ul className="w-full px-4">
+          {coalRequests.slice(0, 2).map((request) => (
+            <li key={request.tableId} className="w-full flex justify-between bg-gray-200 p-2 my-2 rounded">
+              <span>Mesa {request.tableId} solicitó cambio de carbones</span>
+              <button 
+                onClick={() => confirmCoalRequest(request.tableId)}
+                className="ml-2 bg-blue-500 text-white px-2 py-1 rounded"
+              >
+                Confirmar
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+  
 
 export default CoalRequests;

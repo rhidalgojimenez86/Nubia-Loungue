@@ -19,7 +19,7 @@ function Home() {
   }, []);
 
   return (
-    <div>
+    <div >
       <MainSection />
       <h2>Códigos QR de las Mesas</h2>
       <ul>
