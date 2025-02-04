@@ -8,15 +8,20 @@ import Header from "./components/Header";
 function App() {
   return (
     <Router>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/sabores" element={<FlavorSelection />} />
-        <Route path="/carbones" element={<Coals />} />
-      </Routes>
-      <Footer />
+      <div className="flex flex-col min-h-screen">
+        <Header />
+        <div className="flex-1"> {/* Este div asegura que el contenido crezca */}
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/sabores" element={<FlavorSelection />} />
+            <Route path="/carbones" element={<Coals />} />
+          </Routes>
+        </div>
+        <Footer />
+      </div>
     </Router>
   );
 }
+
 
 export default App;
