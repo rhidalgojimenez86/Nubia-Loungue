@@ -68,7 +68,7 @@ const FlavorList = () => {
   };
 
   return (
-    <div className="max-w-lg mx-auto p-4">
+    <div className="page-container">
       <h2 className="text-xl font-bold text-center mb-6">Sabores (Máximo 3 a elegir)</h2>
 
       {["citrus", "sweet", "premium"].map((categoria) => (
