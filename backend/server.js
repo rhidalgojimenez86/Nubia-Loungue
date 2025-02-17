@@ -29,6 +29,8 @@ const io = new socketIo(server, {
 
 const PORT = process.env.PORT || 5000;
 
+app.set('io', io);
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -61,7 +63,7 @@ io.on('connection', (socket) => {
         console.log(`Mesa ${tableId} ha pedido ${requestType}`);
       } else {
         console.log(`Mesa ${tableId} ya está ocupada`);
-        socket.emit('error', `Mesa ${tableId} ya está ocupada`);
+        socket.emit('coal_error',{message: `Mesa ${tableId} ya está ocupada`});
       }
     } catch (error) {
       console.error('Error al manejar la solicitud:', error);
@@ -71,22 +73,23 @@ io.on('connection', (socket) => {
   socket.on('mark-table-free', async (tableId) => {
     try {
       const pool = await getPool();
-      const [table] = await pool.query('SELECT * FROM tables WHERE tableNumber = ?', [tableId]);
-
-      if (table && table.status === 'occupied') {
+      const [rows] = await pool.query('SELECT * FROM tables WHERE tableNumber = ?', [tableId]);
+  
+      if (rows.length > 0 && rows[0].status === 'occupied') {
         await pool.query('UPDATE tables SET status = "free" WHERE tableNumber = ?', [tableId]);
         io.emit('table-status-changed', { tableId, status: 'free' });
         console.log(`Mesa ${tableId} ha sido marcada como libre`);
       } else {
         console.log(`Mesa ${tableId} ya está libre`);
-        socket.emit('error', `Mesa ${tableId} ya está libre`);
+        socket.emit('error', { message: `Mesa ${tableId} ya está libre` });
       }
     } catch (error) {
       console.error('Error al marcar la mesa como libre:', error);
     }
   });
+  
 
-  socket.on('disconnect', () => {
+ socket.on('disconnect', () => {
     console.log('Cliente desconectado');
   });
 });
