@@ -8,7 +8,7 @@ const Header = () => {
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center">
           <h1 className="text-white text-3xl font-bold text-center">Salón Nubia</h1>
           <p className="text-white text-sm mt-2 text-center">
-            Yo voy a donde sea si es contigo hay shisha
+            Yo voy a donde sea si <span className="line-through">es contigo</span> hay shisha
           </p>
         </div>
       </div>
