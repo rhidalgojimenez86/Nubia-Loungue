@@ -10,7 +10,7 @@ function App() {
     <Router>
       <div className="flex flex-col min-h-screen">
         <Header />
-        <div className="flex-1"> {/* Este div asegura que el contenido crezca */}
+        <div className="flex-1"> 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/sabores" element={<FlavorSelection />} />

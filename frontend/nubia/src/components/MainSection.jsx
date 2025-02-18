@@ -4,7 +4,7 @@ const MainSection = () => {
   const navigate = useNavigate();
 
   return (
-    <main className="p-4">
+    <main className="p-4 flex-col items-center">
       <h2 className="text-xl font-semibold text-center mb-4">Elige tu Sisha</h2>
       <div className="flex justify-center space-x-4">
         {/* Botón Sabores con navegación */}
