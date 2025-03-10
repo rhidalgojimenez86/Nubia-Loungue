@@ -32,6 +32,7 @@ body {
   margin: 0;
   display: flex;
   place-items: center;
+  max-width: 430px;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -95,4 +96,10 @@ html, body, #root {
   padding-top: 60px;  /* Si tienes un encabezado de 60px de alto */
   width: 100%;
   height: calc(100vh - 60px);  /* Ajusta el contenido si hay un encabezado fijo */
+}
+
+@media (hover: none) {
+  img:hover {
+    transform: none !important;
+  }
 }
