@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import FlavorSelection from "./pages/FlavorSelection";
 import Coals from "./pages/Coals";
@@ -7,10 +7,9 @@ import Header from "./components/Header";
 
 function App() {
   return (
-    <Router>
       <div className="flex flex-col min-h-screen">
         <Header />
-        <div className="flex-1"> {/* Este div asegura que el contenido crezca */}
+        <div className="flex-1"> 
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/sabores" element={<FlavorSelection />} />
@@ -19,7 +18,6 @@ function App() {
         </div>
         <Footer />
       </div>
-    </Router>
   );
 }
 

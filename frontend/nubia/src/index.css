@@ -82,10 +82,6 @@ html, body, #root {
   box-sizing: border-box;
 }
 
-main {
-  min-height: 100vh;  /* Asegura que el contenedor principal ocupe al menos toda la altura de la pantalla */
-  width: 100%;        /* Asegura que ocupe el 100% del ancho */
-}
 
 /* Clase para ocupar todo el ancho en todas las páginas */
 .page-container {
@@ -99,4 +95,10 @@ main {
   padding-top: 60px;  /* Si tienes un encabezado de 60px de alto */
   width: 100%;
   height: calc(100vh - 60px);  /* Ajusta el contenido si hay un encabezado fijo */
+}
+
+@media (hover: none) {
+  img:hover {
+    transform: none !important;
+  }
 }
